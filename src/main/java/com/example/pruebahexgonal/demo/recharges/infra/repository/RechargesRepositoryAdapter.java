@@ -1,5 +1,6 @@
 package com.example.pruebahexgonal.demo.recharges.infra.repository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,9 +20,12 @@ public class RechargesRepositoryAdapter implements RechargeRepositoryPort{
 
     @Override
     public Recharges save(Recharges recharge) {
-        RechargesEntity entity = RechargesMapper.toEntity(recharge);                             
-        RechargesEntity entitySaved = jpaRechargeRepository.save(entity);
-        return RechargesMapper.toDomain(entitySaved);
+        RechargesEntity entity = new RechargesEntity();
+        entity.setId(null);
+        entity.setValueRecharge(recharge.getValueRecharge());
+        entity.setDateRecharge((recharge.getDateRecharge()==null) ? LocalDate.now() : recharge.getDateRecharge());
+        RechargesEntity rechargeSaved = jpaRechargeRepository.save(entity);
+        return RechargesMapper.toDomain(rechargeSaved);
     }
 
     @Override

@@ -8,10 +8,10 @@ import com.example.pruebahexgonal.demo.recharges.domain.Recharges;
 public class RechargesMapper {
     public static Recharges toDomain(RechargesEntity entity){
         if (entity == null) return null;
-        Recharges recharges = new Recharges();
-        recharges.setId(entity.getId());
-        recharges.setValueRecharge(entity.getValueRecharge());
-        recharges.setDateRecharge(entity.getDateRecharge());
+        Recharges recharges = new Recharges(
+            entity.getId(),
+            entity.getValueRecharge(),
+            entity.getDateRecharge());
         return recharges;
     }
 
@@ -30,4 +30,11 @@ public class RechargesMapper {
         recharges.setValueRecharge(dto.getValueRecharge());
         return recharges;
     }
+
+     public static Recharges fromUpdateDTOtoDomain(Long id, RechargesUpdateDTO dto) {
+       Recharges recharges = new Recharges(
+        id, dto.getValueRecharge(), dto.getDateRecharge()
+        );
+        return recharges;
+     }
 }

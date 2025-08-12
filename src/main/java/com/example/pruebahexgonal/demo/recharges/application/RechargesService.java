@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pruebahexgonal.demo.exception.CustomException;
-import com.example.pruebahexgonal.demo.recharges.domain.RechargeRepositoryPort;
-import com.example.pruebahexgonal.demo.recharges.domain.Recharges;
+import com.example.pruebahexgonal.demo.recharges.domain.*;
+
 
 
 @Service
@@ -20,11 +20,7 @@ public class RechargesService {
     }
 
     @Transactional
-    public Recharges createRecharge(Recharges recharges){
-        recharges.setId(null);
-        if(recharges.getDateRecharge() == null){
-            recharges.setDateRecharge(LocalDate.now());
-        }
+    public Recharges createRecharge(Recharges recharges){       
         return rechargesPort.save(recharges);
     }
 
@@ -41,14 +37,17 @@ public class RechargesService {
     }
     
     @Transactional
-    public Recharges updateRecharges(Long id, Recharges incoming){
+    public Recharges updateRecharge(Long id, Recharges incoming){
         Recharges current = findRechargesById(id);
-        if (incoming.getValueRecharge()!=null) current.setValueRecharge(incoming.getValueRecharge());
+        if (incoming.getDateRecharge() != null) current.setDateRecharge(incoming.getDateRecharge());
+        if (incoming.getValueRecharge() !=null) current.setValueRecharge(incoming.getValueRecharge());
+        
         return current;
     }
 
     @Transactional
     public void deleteRecharges(Long id){
         if (!rechargesPort.existsById(id))  throw new CustomException(id,"Recharges");
+        rechargesPort.delete(id);
     }
 }
