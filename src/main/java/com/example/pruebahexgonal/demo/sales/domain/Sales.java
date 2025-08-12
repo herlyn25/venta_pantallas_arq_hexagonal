@@ -1,25 +1,25 @@
 package com.example.pruebahexgonal.demo.sales.domain;
 
 import java.time.LocalDate;
-import com.example.pruebahexgonal.demo.clients.domain.Clients;
 
 public class Sales {
     private Long id;
     private String description;
     private Integer valorCompra;
     private Integer valorVenta;    
-    private Clients cliente;
+    private Long clientId;
     private LocalDate fechaCompra;
        
     public Sales() {
     }
 
-    public Sales(String description, Integer valorCompra, Integer valorVenta, Integer ganancias, Clients cliente,
+    public Sales(Long id,String description, Integer valorCompra, Integer valorVenta, Long clientId,
             LocalDate fechaCompra) {
+        this.id = id;
         this.description = description;
         this.valorCompra = valorCompra;
         this.valorVenta = valorVenta;        
-        this.cliente = cliente;
+        this.clientId = clientId;
         this.fechaCompra = fechaCompra;
     }
     public Long getId() {
@@ -37,7 +37,7 @@ public class Sales {
     public Integer getValorCompra() {
         return valorCompra;
     }
-    public void setValorCompra(int valorCompra) {
+    public void setValorCompra(Integer valorCompra) {
         this.valorCompra = valorCompra;
     }
     public Integer getValorVenta() {
@@ -47,11 +47,11 @@ public class Sales {
         this.valorVenta = valorVenta;
     }
     
-    public Clients getCliente() {
-        return cliente;
+    public Long getClientId() {
+        return clientId;
     }
-    public void setCliente(Clients cliente) {
-        this.cliente = cliente;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
     public LocalDate getFechaCompra() {
         return fechaCompra;

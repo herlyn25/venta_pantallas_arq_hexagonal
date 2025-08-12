@@ -31,23 +31,23 @@ public class SalesController {
 
     @GetMapping("all")
     public List<Sales> findAllSales() {
-        return salesServices.findAll();
+        return salesServices.findSalesAll();
     } 
     
     @GetMapping("/{id}")
-    public Sales getMethodName(@PathVariable Long id) {
-        return salesServices.findSalesById(id);
+    public Sales findById(@PathVariable Long id) {
+        return salesServices.findSaleById(id);
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
-        salesServices.deleteById(id);
+        salesServices.deleteSaleById(id);
         return ResponseEntity.noContent().build();
     }
     
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,  @RequestBody SalesUpdateDTO entity) {      
-        Sales updated = salesServices.update(id, salesMapper.fromUpdateDTOtoDomain(entity));
+    public ResponseEntity<Sales> update(@PathVariable Long id,  @RequestBody SalesUpdateDTO entity) {      
+        Sales updated = salesServices.updateSales(id, salesMapper.fromUpdateDTOtoDomain(id, entity));
         return ResponseEntity.ok(updated);
     }
 }

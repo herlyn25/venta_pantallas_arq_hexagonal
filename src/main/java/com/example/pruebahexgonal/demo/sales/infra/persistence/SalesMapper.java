@@ -1,7 +1,5 @@
 package com.example.pruebahexgonal.demo.sales.infra.persistence;
 
-import java.time.LocalDate;
-
 import org.springframework.stereotype.Component;
 
 import com.example.pruebahexgonal.demo.clients.domain.Clients;
@@ -12,21 +10,14 @@ import com.example.pruebahexgonal.demo.sales.domain.Sales;
 public class SalesMapper {
     public Sales toDomain(SalesEntity entity){
         if (entity == null) return null;
-        Sales sales = new Sales();
-        sales.setId(entity.getId());
-        sales.setDescription(entity.getDescription());
-        sales.setValorCompra(entity.getValorCompra());
-        sales.setValorVenta(entity.getValorVenta());       
-        sales.setFechaCompra(entity.getFechaCompra());
-        
-        if(entity.getClient() != null) {
-            Clients clients = new Clients(
-                entity.getClient().getId(),
-                entity.getClient().getFirstname(),
-                entity.getClient().getLastname(),
-                entity.getClient().getEmail());
-                sales.setCliente(clients);
-        }           
+        Sales sales = new Sales(   
+            entity.getId(),         
+            entity.getDescription(),
+            entity.getValorCompra(),
+            entity.getValorVenta(), 
+            entity.getClient().getId(),      
+            entity.getFechaCompra()    
+        );                
         return sales;
     }
     
@@ -36,14 +27,14 @@ public class SalesMapper {
         SalesEntity entity = new SalesEntity();
         entity.setId(sales.getId());
         entity.setDescription(sales.getDescription());
-        entity.setValorCompra(sales.getValorCompra());
-        entity.setValorVenta(sales.getValorVenta());      
+        entity.setValorCompra(Integer.valueOf(sales.getValorCompra()));
+        entity.setValorVenta(Integer.valueOf(sales.getValorVenta()));      
         entity.setFechaCompra(sales.getFechaCompra());
 
         // ✅ Solo asigna el cliente si tiene ID, y crea una referencia parcial
-        if (sales.getCliente() != null && sales.getCliente().getId() != null) {
+        if (sales.getClientId() != null) {
             ClientsEntity client = new ClientsEntity();
-            client.setId(sales.getCliente().getId()); // Solo el ID
+            client.setId(sales.getClientId()); // Solo el ID
             entity.setClient(client); // JPA entenderá que es una referencia existente
         }
         return entity;
@@ -52,23 +43,24 @@ public class SalesMapper {
     public Sales fromDTOtoDomain(SalesDto dto){
         Sales sales = new Sales();
         sales.setDescription(dto.description());
-        sales.setValorCompra(dto.valorCompra());
-        sales.setValorVenta(dto.valorVenta());        
+        sales.setValorCompra(Integer.valueOf(dto.valorCompra()));
+        sales.setValorVenta(Integer.valueOf(dto.valorVenta()));        
         Clients client = new Clients();
         client.setId(dto.clientId());
-        sales.setCliente(client);
+        sales.setClientId(client.getId());
         return sales;
     }
 
-    public Sales fromUpdateDTOtoDomain(SalesUpdateDTO dto){
+    public Sales fromUpdateDTOtoDomain(Long id,SalesUpdateDTO dto){
         Sales sales = new Sales();
+        sales.setId(id);
         sales.setDescription(dto.getDescription());
         sales.setValorCompra(dto.getValorCompra());
         sales.setValorVenta(dto.getValorVenta());        
-        sales.setFechaCompra(dto.getFechaCompra());
-        Clients client = new Clients();
-        client.setId(dto.getClientId());
-        sales.setCliente(client);
+        sales.setFechaCompra(dto.getFechaCompra());        
+        sales.setClientId(dto.getClientId());
         return sales;
     }
+
+    
 }

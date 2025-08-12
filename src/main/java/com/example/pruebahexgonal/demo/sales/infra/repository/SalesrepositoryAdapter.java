@@ -1,11 +1,11 @@
 package com.example.pruebahexgonal.demo.sales.infra.repository;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.pruebahexgonal.demo.clients.domain.Clients;
 import com.example.pruebahexgonal.demo.clients.infra.persistence.ClientsEntity;
 import com.example.pruebahexgonal.demo.clients.infra.repository.JpaClientRepository;
 import com.example.pruebahexgonal.demo.exception.CustomException;
@@ -15,13 +15,13 @@ import com.example.pruebahexgonal.demo.sales.infra.persistence.SalesEntity;
 import com.example.pruebahexgonal.demo.sales.infra.persistence.SalesMapper;
 
 @Service
-public class SalesrepositoryAdapter implements SalesRepositoryPort{
+public class SalesRepositoryAdapter implements SalesRepositoryPort{
 
     private final JpaSalesRepository jpaSalesRepository;
     private final JpaClientRepository jpaClientRepository;
     private final SalesMapper salesMapper;
 
-    public SalesrepositoryAdapter(
+    public SalesRepositoryAdapter(
         JpaSalesRepository jpaSalesRepository,
         JpaClientRepository jpaClientRepository, 
         SalesMapper salesMapper) {
@@ -31,34 +31,27 @@ public class SalesrepositoryAdapter implements SalesRepositoryPort{
     }    
 
     @Override
-    public Sales save(Sales sale) {
-        SalesEntity entity = (sale.getId() != null) 
-                                ? jpaSalesRepository.findById(sale.getId()).orElse(new SalesEntity())
-                                : new SalesEntity ();
-            entity.setId(sale.getId());
-            entity.setDescription(sale.getDescription());
-            entity.setValorCompra(sale.getValorCompra());
-            entity.setValorVenta(sale.getValorVenta());
-            entity.setFechaCompra(sale.getFechaCompra());
-        ClientsEntity entityClient = (sale.getCliente().getId()!=null)
-                                        ? jpaClientRepository.findById(sale.getCliente().getId()).orElse(new ClientsEntity())
-                                        : new ClientsEntity();
-                    entityClient.setId(sale.getCliente().getId());
-            entity.setClient(entityClient); 
+    public Sales save(Sales sale) {                                       
+        ClientsEntity entityClient = jpaClientRepository.findById(sale.getClientId())
+                            .orElse(new ClientsEntity());
             
-        SalesEntity salesSaved = jpaSalesRepository.save(entity);
-
-
-            return salesMapper.toDomain(salesSaved);
-       
+        if (entityClient.getId()==null) throw new CustomException(sale.getClientId(),"Client");          
+        entityClient.setId(sale.getClientId());
+        
+        SalesEntity salesEntity = new SalesEntity();
+        salesEntity.setDescription(sale.getDescription());
+        salesEntity.setValorCompra(sale.getValorCompra());
+        salesEntity.setValorVenta(sale.getValorVenta());
+        salesEntity.setFechaCompra((sale.getFechaCompra()==null) ? LocalDate.now() : sale.getFechaCompra());
+        salesEntity.setClient(entityClient);
+            
+        SalesEntity salesSaved = jpaSalesRepository.save(salesEntity);
+        return salesMapper.toDomain(salesSaved);       
     }
 
     @Override
-    public Sales findById(Long id) {
-        Sales sales = salesMapper.toDomain(jpaSalesRepository.findById(id).orElseThrow(
-            ()-> new CustomException(id,"sales"))         
-        );
-        return sales;
+    public Optional<Sales> findById(Long id) {        
+        return jpaSalesRepository.findById(id).map(salesMapper::toDomain);
     }
 
     @Override
@@ -76,5 +69,25 @@ public class SalesrepositoryAdapter implements SalesRepositoryPort{
     @Override
     public boolean existsById(Long id) {
         return jpaSalesRepository.existsById(id);
+    }
+
+    @Override
+    public Sales update(Long id, Sales sale) {
+        SalesEntity salesEntity = jpaSalesRepository.findById(id).orElseThrow(
+                                    () -> new CustomException(id, "Sales")
+        );               
+               
+        if (sale.getDescription() !=null) salesEntity.setDescription(sale.getDescription());
+        if (sale.getValorCompra() !=null) salesEntity.setValorCompra(sale.getValorCompra());
+        if (sale.getValorVenta() !=null) salesEntity.setValorVenta(sale.getValorVenta());
+        salesEntity.setFechaCompra((sale.getFechaCompra()==null) ? LocalDate.now() : sale.getFechaCompra());        
+        
+        if (sale.getClientId() != null){
+            ClientsEntity clientsEntity = new ClientsEntity();
+            clientsEntity.setId(sale.getClientId());
+            salesEntity.setClient(clientsEntity);
+        } 
+        SalesEntity updatedSales = jpaSalesRepository.save(salesEntity);
+        return salesMapper.toDomain(updatedSales);
     }    
 }

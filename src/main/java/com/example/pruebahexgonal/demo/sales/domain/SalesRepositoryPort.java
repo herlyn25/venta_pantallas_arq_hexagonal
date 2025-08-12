@@ -1,11 +1,12 @@
 package com.example.pruebahexgonal.demo.sales.domain;
 
-import java.util.List;
+import java.util.*;
 
 public interface SalesRepositoryPort {
     Sales save(Sales sale);
-    Sales findById(Long id);
+    Optional<Sales> findById(Long id);
     List<Sales> findAll();
     void deleteById(Long id); 
-    boolean existsById(Long id);    
+    boolean existsById(Long id); 
+    Sales update(Long id, Sales sale);   
 } 

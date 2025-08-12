@@ -21,6 +21,6 @@ public class SalesEntity {
     private Integer valorVenta;
     private LocalDate fechaCompra;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn()
+    @JoinColumn(name="client_id", nullable = false)
     private ClientsEntity client;    
 }

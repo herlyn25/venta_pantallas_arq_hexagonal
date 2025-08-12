@@ -40,7 +40,7 @@ public class ClientServices {
     } 
     
     @Transactional
-    public Clients update(Long id, Clients incoming){
+    public Clients updateClient(Long id, Clients incoming){
         Clients current = findClientsById(id);
         if(current == null) throw new CustomException(id,"Client");
         

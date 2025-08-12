@@ -49,7 +49,7 @@ public class ClientsController {
 
     @PutMapping("update/{id}")
     public ResponseEntity<Clients> update(@PathVariable Long id, @RequestBody ClientsEntityUpdateDTO clientUpdate) {
-       Clients updated = clientsServices.update(id, ClientsMapper.fromUpdateDTOtoDomain(clientUpdate));
+       Clients updated = clientsServices.updateClient(id, ClientsMapper.fromUpdateDTOtoDomain(clientUpdate));
        return ResponseEntity.ok(updated);
     }
 

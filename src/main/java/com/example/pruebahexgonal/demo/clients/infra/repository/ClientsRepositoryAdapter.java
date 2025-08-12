@@ -22,7 +22,8 @@ public class ClientsRepositoryAdapter implements ClientRepositoryPort{
     @Override
     public Clients save(Clients client) {
         ClientsEntity entity = (client.getId() !=null ) 
-                                ? jpaClientRepository.findById(client.getId()).orElse(new ClientsEntity())
+                                ? jpaClientRepository.findById(client.getId())
+                                .orElse(new ClientsEntity())
                                 : new ClientsEntity();
             entity.setId(client.getId());
             entity.setFirstname(client.getFirstname());
@@ -62,6 +63,5 @@ public class ClientsRepositoryAdapter implements ClientRepositoryPort{
      @Override
      public boolean existsByEmail(String email) {
         return jpaClientRepository.existsByEmail(email);
-     }
-   
+     }   
 }

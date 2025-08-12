@@ -10,8 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SalesUpdateDTO
-   {
+public class SalesUpdateDTO{
    private String description;
    private Integer valorCompra;
    private Integer valorVenta;  

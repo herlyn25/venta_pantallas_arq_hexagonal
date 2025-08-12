@@ -1,6 +1,5 @@
 package com.example.pruebahexgonal.demo.exception;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
