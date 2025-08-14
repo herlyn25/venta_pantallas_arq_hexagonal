@@ -1,6 +1,5 @@
 package com.example.pruebahexgonal.demo.recharges.application;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;

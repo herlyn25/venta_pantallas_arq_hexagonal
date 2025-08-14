@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RestExceptionHandler {
+
+
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<Map<String,Object>> handleEmailInUse(EmailAlreadyUsedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
